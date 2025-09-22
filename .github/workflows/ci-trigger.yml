@@ -13,7 +13,7 @@ jobs:
     - name: Trigger n8n Webhook
       uses: fjogeleit/http-request-action@v1
       with:
-        url: http://localhost:5678/webhook/ci-webhook
+        url: http://localhost:5678/webhook-test/ci-webhook
         method: POST
         contentType: 'application/json'
         body: |
