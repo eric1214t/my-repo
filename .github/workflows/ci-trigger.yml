@@ -1,0 +1,25 @@
+name: Trigger n8n CI Workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  trigger-n8n:
+    runs-on: self-hosted
+    steps:
+    - name: Trigger n8n Webhook
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: http://localhost:5678/webhook/ci-webhook
+        method: POST
+        contentType: 'application/json'
+        body: |
+          {
+            "ref": "${{ github.ref }}",
+            "commit": "${{ github.sha }}",
+            "repository": "${{ github.repository }}",
+            "event": "${{ github.event_name }}"
+          }
