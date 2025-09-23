@@ -54,7 +54,7 @@ jobs:
       - name: Run tests with pytest
         run: pytest --maxfail=5 --disable-warnings -v
 
-codeql:
+  codeql:
     name: Analyze with CodeQL
     runs-on: ubuntu-latest
     permissions: # CodeQL 需要這些權限才能上傳結果
