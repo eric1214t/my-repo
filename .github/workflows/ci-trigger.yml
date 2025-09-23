@@ -4,10 +4,9 @@ on:
   push:
     paths:
       - '**.py'                  # 只偵測 Python 檔案
-    paths-ignore:
-      - '.github/workflows/**'   # 忽略 workflow 自己
 
   workflow_dispatch:              # 允許手動觸發
+
 
 
 jobs:
