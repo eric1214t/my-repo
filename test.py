@@ -10,6 +10,6 @@ def safe_division():
     return "ok"
 
 def test_safe_division():
-    """Test that safe_division returns ok."""
+    """Test that safe_division returns ok.."""
     assert safe_division() == "ok"
 
