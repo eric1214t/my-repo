@@ -14,4 +14,4 @@ def test_safe_division():
     assert safe_division() == "ok"
     x=8/0
 
-x=9/0
+x=10/0
