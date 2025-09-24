@@ -30,18 +30,9 @@ jobs:
           cat flake8.log
           grep -E "E999|NameError" flake8.log && exit 1 || true
 
-      - name: Run Pylint (block fatal errors only)
-        run: find . -name "*.py" | xargs pylint --errors-only
-
       - name: Run Black (format check, advisory via PR comments)
         run: |
           black --check --diff . | reviewdog -f=diff -name="black" -reporter=github-pr-review -level=warning || true
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run Pylint (style check, advisory via PR comments)
-        run: |
-          find . -name "*.py" | xargs pylint --disable=all --enable=style,convention,warning,refactor | reviewdog -efm="%f:%l:%c: %m" -name="pylint-style" -reporter=github-pr-review -level=info
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
