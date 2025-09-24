@@ -1,12 +1,15 @@
-# hello.py
-def foo():
-	print("Hello")
-	try:
-		x = 9/0
-	except:
-		x = None
-	return "ok"
-# x=58/0
-# pytest 測試函式
-def test_foo():
-	assert foo() == "ok"
+"""Example module for testing pylint in GitHub Actions."""
+
+def safe_division():
+    """Return 'ok' even if division by zero occurs."""
+    print("Hello")
+    try:
+        _ = 9 / 0
+    except ZeroDivisionError:
+        _ = None
+    return "ok"
+
+def test_safe_division():
+    """Test that safe_division returns ok."""
+    assert safe_division() == "ok"
+
