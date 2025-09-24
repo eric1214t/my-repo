@@ -1,7 +1,7 @@
 def foo():
     print("Hello")
     try:
-        x = 9/0
+        x = 6/0
     except ZeroDivisionError:
         x = None
 foo()
