@@ -1,4 +1,4 @@
 def foo():
     print("Hello")
-    x =8/0  # <- 故意除以零，bandit 會檢查到
+    x =9/0  # <- 故意除以零，bandit 會檢查到
 foo()
