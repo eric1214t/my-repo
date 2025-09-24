@@ -24,14 +24,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8 black pylint reviewdog
 
-      # ---- 強制性檢查 (Blocking) ----
-      - name: Run Flake8 (blocking: syntax & critical issues)
+      - name: Run Flake8 (blocking syntax & critical issues)
         run: flake8 --max-line-length=120 .
 
-      - name: Run Pylint (blocking: fatal errors only)
+      - name: Run Pylint (blocking fatal errors only)
         run: find . -name "*.py" | xargs pylint --errors-only
 
-      # ---- 非強制性檢查 (Non-blocking, with PR comments) ----
       - name: Run Black (format check, advisory via PR comments)
         run: |
           black --check --diff . | reviewdog -f=diff -name="black" -reporter=github-pr-review -level=warning
