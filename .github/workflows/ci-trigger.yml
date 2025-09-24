@@ -30,8 +30,9 @@ jobs:
 
       - name: Run Pylint (blocking: fatal errors only)
         run: |
+          # 使用 find，比 "**/*.py" 更穩定
           find . -name "*.py" | xargs pylint --errors-only
-        # <<--- 使用 find，比 "**/*.py" 更穩定
+
 
       # ---- 非強制性檢查 (Non-blocking, with PR comments) ----
       - name: Run Black (format check, advisory via PR comments)
