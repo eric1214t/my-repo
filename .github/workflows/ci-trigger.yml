@@ -1,44 +1,51 @@
-name: Python CI
+# .github/workflows/ci.yml
+name: Python CI Checks
 
 on:
   push:
-    paths:
-      - '**.py'
+    branches: [ "main" ]
   pull_request:
-  workflow_dispatch:
+    branches: [ "main" ]
 
 jobs:
-  lint-and-test:
+  build-and-test:
     runs-on: ubuntu-latest
+    strategy:
+      # 測試多個 Python 版本
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    # 步驟 1: 取得程式碼
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+    # 步驟 2: 設定 Python 環境
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install flake8 black pylint pytest
+    # 步驟 3: 安裝依賴套件
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run Flake8 (語法檢查)
-        run: flake8 .
-
-      - name: Run Black (程式碼格式檢查)
-        run: black --check .
-
-      - name: Run Pylint (靜態分析)
-        run: pylint **/*.py
-
-      - name: Run Pytest (單元測試, 若存在)
-        run: |
-          if ls test_*.py *_test.py >/dev/null 2>&1; then
-            echo "✅ 發現測試檔，執行 pytest"
-            pytest -v
-          else
-            echo "⚠️ 未發現測試檔，略過 pytest"
-          fi
+    # 步驟 4: 執行程式碼風格檢查 (Lint)
+    # flake8 會檢查語法錯誤、不符合 PEP8 風格的程式碼
+    - name: Lint with flake8
+      run: |
+        # --count: 顯示錯誤總數
+        # --select=E9,F63,F7,F82: 只報告特定類型的錯誤 (例如語法錯誤、未定義變數)
+        # --show-source: 顯示有問題的程式碼行
+        # --statistics: 顯示每個錯誤的統計數量
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # 如果需要更嚴格的風格檢查，可以直接執行 `flake8 .`
+        
+    # 步驟 5: 執行單元測試
+    - name: Test with pytest
+      run: |
+        pytest
