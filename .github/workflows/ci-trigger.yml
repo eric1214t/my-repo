@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -22,19 +22,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 black pylint reviewdog
+          pip install flake8 black pylint
 
-      - name: Run Flake8 (block syntax & critical issues)
-        run: |
-          flake8 --max-line-length=120 . > flake8.log || true
-          cat flake8.log
-          grep -E "E999|NameError" flake8.log && exit 1 || true
+      - name: Run Flake8
+        run: flake8 --max-line-length=120 .
 
-      - name: Run Black (format check, advisory via PR comments)
-        run: |
-          black --check --diff . | reviewdog -f=diff -name="black" -reporter=github-pr-review -level=warning || true
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Black (Check for formatting issues)
+        run: black --check --verbose .
+
+      - name: Run Pylint
+        run: pylint --max-line-length=120 **/*.py
 
   test:
     runs-on: ubuntu-latest
