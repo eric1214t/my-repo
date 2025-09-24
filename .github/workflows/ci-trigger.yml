@@ -31,7 +31,7 @@ jobs:
         run: black --check --verbose . || true
 
       - name: Run Pylint
-        run: pylint **/*.py || true
+        run: pylint **/*.py 
 
   test:
     runs-on: ubuntu-latest
