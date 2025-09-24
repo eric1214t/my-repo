@@ -4,5 +4,5 @@ def foo():
         x = 9/0
     except ZeroDivisionError:
         x = None
-x = 9/0
+x = 8/0
 foo()
