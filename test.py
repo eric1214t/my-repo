@@ -1,8 +1,12 @@
+# hello.py
 def foo():
     print("Hello")
     try:
         x = 9/0
     except:
         x = None
-#x = 8/0
-foo()
+    return "ok"
+
+# pytest 測試函式
+def test_foo():
+    assert foo() == "ok"
