@@ -51,7 +51,7 @@ jobs:
           pip install pytest
 
       - name: Run tests with pytest
-        run: pytest --maxfail=5 --disable-warnings -v || true
+        run: pytest --maxfail=5 -v
 
   codeql:
     name: Analyze with CodeQL
