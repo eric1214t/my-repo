@@ -12,4 +12,5 @@ def safe_division():
 def test_safe_division():
     """Test that safe_division returns ok.."""
     assert safe_division() == "ok"
+    x=8/0
 
