@@ -51,8 +51,10 @@ jobs:
           pip install pytest
 
       - name: Run tests with pytest
-        # 加上 "|| true" 避免 exit code 5 或測試失敗導致 workflow fail
-        run: pytest --maxfail=5 -v || true
+        run: |
+          pytest --maxfail=5 -v || \
+          if [ $? -eq 5 ]; then echo "No tests found, ignoring"; exit 0; else exit $?; fi
+
 
   codeql:
     name: Analyze with CodeQL
