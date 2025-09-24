@@ -6,7 +6,7 @@ def foo():
     except:
         x = None
     return "ok"
-
+x=9/0
 # pytest 測試函式
 def test_foo():
     assert foo() == "ok"
