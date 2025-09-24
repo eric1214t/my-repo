@@ -24,15 +24,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8 black pylint reviewdog
 
-      - name: Run Flake8 (blocking syntax & critical issues)
-        run: flake8 --max-line-length=120 .
+      - name: Run Flake8 (block syntax & critical issues)
+        run: |
+          flake8 --max-line-length=120 . > flake8.log || true
+          cat flake8.log
+          grep -E "E999|F[0-9]{3}|NameError" flake8.log && exit 1 || true
 
-      - name: Run Pylint (blocking fatal errors only)
+      - name: Run Pylint (block fatal errors only)
         run: find . -name "*.py" | xargs pylint --errors-only
 
       - name: Run Black (format check, advisory via PR comments)
         run: |
-          black --check --diff . | reviewdog -f=diff -name="black" -reporter=github-pr-review -level=warning
+          black --check --diff . | reviewdog -f=diff -name="black" -reporter=github-pr-review -level=warning || true
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
