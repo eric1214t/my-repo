@@ -33,14 +33,14 @@ jobs:
           python -m compileall -q .
 
       # ✅ 2. 嘗試執行所有 .py（若無法執行則中止 Push/PR）
-      #    可避免 runtime error
-      - name: Runtime check (dry-run)
+      - name: Runtime check (execute all .py)
         run: |
-          echo "Running dry-run for Python files..."
+          echo "Running runtime check..."
           for file in $(find . -name "*.py"); do
             echo "Testing $file ..."
-            python "$file" --help > /dev/null 2>&1 || true
+            python "$file" || exit 1
           done
+
 
       # ✅ 3. Lint 檢查（不會中斷流程，即使有警告也允許 Push/PR）
       - name: Run flake8 (non-blocking)
