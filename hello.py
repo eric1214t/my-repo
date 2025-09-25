@@ -1,2 +1,2 @@
 print("Hello, CI Test")
-x=6/0
+x=16/0
