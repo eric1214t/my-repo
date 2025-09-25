@@ -1,2 +1,2 @@
 print("Hello, CI Test")
-#x=99/0
+x=999/0
