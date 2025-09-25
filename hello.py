@@ -1,1 +1,1 @@
-print(Hello, CI Test)
+print("Hello, CI Test")
