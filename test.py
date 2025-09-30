@@ -1,2 +1,2 @@
 print('hello CI')
-x=999/1
+x=9988/1
