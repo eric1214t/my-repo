@@ -1,2 +1,2 @@
 print('hello CI')
-x=10/0
+x=12/0
