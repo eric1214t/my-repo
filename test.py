@@ -1,1 +1,2 @@
-"print('hello CI')" 
+print('hello CI')
+x=x+1
