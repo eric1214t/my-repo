@@ -1,0 +1,1 @@
+open("/root/secret.txt", "r")
