@@ -1,4 +1,4 @@
-name: Python CI (Per File)
+name: Python CI
 
 on:
   push:
@@ -7,7 +7,6 @@ on:
   pull_request:
     paths:
       - '**/*.py'
-  workflow_dispatch:
 
 jobs:
   ci:
@@ -17,57 +16,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install flake8
-        run: pip install flake8
+      - name: Install dependencies (if requirements.txt exists)
+        run: |
+          if [ -f requirements.txt ]; then
+            echo "Found requirements.txt. Installing..."
+            pip install -r requirements.txt
+          else
+            echo "No requirements.txt found. Skipping dependency installation."
+          fi
 
       - name: Syntax check
         run: |
           echo "Running syntax check..."
           python -m compileall -q .
 
-      - name: Runtime check with timing per file
+      - name: Runtime check (execute all .py)
         run: |
-          echo "file,result,duration(s)" > ci_results.txt
+          echo "Running runtime check..."
           for file in $(find . -name "*.py"); do
             echo "Testing $file ..."
-            start=$(date +%s)
-            if python "$file" >tmp.log 2>&1; then
-              end=$(date +%s)
-              duration=$((end - start))
-              echo "$file,success,$duration" >> ci_results.txt
-            else
-              end=$(date +%s)
-              duration=$((end - start))
-              echo "$file,failed ($(<tmp.log)),$duration" >> ci_results.txt
-            fi
+            python "$file"
           done
-          echo "=== Runtime results ==="
-          cat ci_results.txt
 
-      - name: Flake8 check with per-file results
+      - name: Run flake8 (non-blocking)
         continue-on-error: true
         run: |
-          echo "" >> ci_results.txt
-          echo "=== Flake8 results ===" >> ci_results.txt
-          for file in $(find . -name "*.py"); do
-            output=$(flake8 "$file" 2>&1 || true)
-            if [ -z "$output" ]; then
-              echo "$file,flake8_pass" >> ci_results.txt
-            else
-              echo "$file,flake8_fail,${output//$'\n'/ }" >> ci_results.txt
-            fi
-          done
-          echo "=== Lint results ==="
-          tail -n 20 ci_results.txt
-
-      
-      - name: Upload test result file
-        uses: actions/upload-artifact@v4
-        with:
-          name: ci_results
-          path: ci_results.txt
+          pip install flake8
+          echo "Running flake8 linting..."
+          flake8 . || true
